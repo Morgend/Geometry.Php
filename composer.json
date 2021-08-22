@@ -1,0 +1,22 @@
+{
+    "name": "clever-st/geometry",
+    "description": "Geometry Library for PHP",
+    "version": "0.0.1",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrey Pokidov",
+            "email": "andrey.pokidov@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "CleverST\\Geometry": "src/"
+        }
+    }
+}
