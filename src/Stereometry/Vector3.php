@@ -218,29 +218,18 @@ class Vector3
      * @param Vector3 $vector
      * @return Vector3
      */
-    public function vectorMultiply(Vector3 $vector)
+    public function vectorMultiply(Vector3 $vector, bool $assign = false)
     {
-        return new Vector3(
-            $this->y * $vector->z - $this->z * $vector->y,
-            $this->z * $vector->x - $this->x * $vector->z,
-            $this->x * $vector->y - $this->y * $vector->x
-        );
-    }
-    
-    /**
-     * 
-     * @param Vector3 $v
-     * @return $this
-     */
-    public function vectorMultiplyAndAssign(Vector3 $v)
-    {
-        $this->setValues(
-            $this->y * $v->z - $this->z * $v->y,
-            $this->z * $v->x - $this->x * $v->z,
-            $this->x * $v->y - $this->y * $v->x
-        );
-
-        return $this;
+        $x = $this->y * $vector->z - $this->z * $vector->y;
+        $y = $this->z * $vector->x - $this->x * $vector->z;
+        $z = $this->x * $vector->y - $this->y * $vector->x;
+        
+        if ($assign) {
+            $this->setValues($x, $y, $z);
+            return $this;
+        }
+        
+        return new Vector3($x, $y, $z);
     }
     
     /**
@@ -291,93 +280,78 @@ class Vector3
     /**
      * 
      * @param Vector3 $vector
+     * @param bool $assign
      * @return Vector3
      */
-    public function summarize(Vector3 $vector)
+    public function summarize(Vector3 $vector, bool $assign = false)
     {
+        if ($assign) {
+            $this->x += $vector->x;
+            $this->y += $vector->y;
+            $this->z += $vector->z;
+            
+            return $this;
+        }
+        
         return new Vector3($this->x + $vector->x, $this->y + $vector->y);
     }
 
     /**
      * 
-     * @param Vector3 $v
-     * @return $this
-     */
-    public function summarizeAndAssign(Vector3 $v)
-    {
-        $this->x += $v->x;
-        $this->y += $v->y;
-        
-        return $this;
-    }
-
-    /**
-     * 
      * @param Vector3 $vector
+     * @param bool $assign
      * @return $this
      */
-    public function subtract(Vector3 $vector)
+    public function subtract(Vector3 $vector, bool $assign = false)
     {
+        if ($assign) {
+            $this->x -= $vector->x;
+            $this->y -= $vector->y;
+            $this->z -= $vector->z;
+            
+            return $this;
+        }
+        
         return new Vector3($this->x - $vector->x, $this->y - $vector->y);
     }
 
-    /**
-     * 
-     * @param Vector3 $v
-     * @return $this
-     */
-    public function subtractAndAssign(Vector3 $v)
-    {
-        $this->x -= $v->x;
-        $this->y -= $v->y;
-        
-        return $this;
-    }
 
     /**
      * 
      * @param float $value
+     * @param bool $assign
      * @return Vector3
      */
-    public function multiply(float $value)
+    public function multiply(float $value, bool $assign = false)
     {
+        if ($assign) {
+            $this->x *= $value;
+            $this->y *= $value;
+            $this->z *= $value;
+            
+            return $this;
+        }
+        
         return new Vector3($this->x * $value, $this->y * $value);
     }
 
     /**
      * 
      * @param float $value
-     * @return $this
-     */
-    public function multiplyAndAssign(float $value)
-    {
-        $this->x *= $value;
-        $this->y *= $value;
-        
-        return $this;
-    }
-
-    /**
-     * 
-     * @param float $value
+     * @param bool $assign
      * @return Vector3
      */
-    public function divide(float $value)
+    public function divide(float $value, bool $assign = false)
     {
-        return new Vector3($this->x / $value, $this->y / $value);
-    }
-
-    /**
-     * 
-     * @param float $value
-     * @return $this
-     */
-    public function divideAssign(float $value)
-    {
-        $this->x /= $value;
-        $this->y /= $value;
+        if ($assign) {
+            $this->x /= $value;
+            $this->y /= $value;
+            $this->z /= $value;
+            
+            return $this;
+        }
         
-        return $this;
+        return new Vector3($this->x / $value, $this->y / $value);
     }
 
     /**

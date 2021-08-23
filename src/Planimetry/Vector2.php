@@ -225,93 +225,73 @@ class Vector2
     /**
      * 
      * @param Vector2 $vector
+     * @param bool $assign
      * @return Vector2
      */
-    public function summarize(Vector2 $vector)
+    public function summarize(Vector2 $vector, bool $assign = false)
     {
+        if ($assign) {
+            $this->x += $vector->x;
+            $this->y += $vector->y;
+            
+            return $this;
+        }
+        
         return new Vector2($this->x + $vector->x, $this->y + $vector->y);
     }
 
     /**
      * 
-     * @param Vector2 $v
-     * @return $this
-     */
-    public function summarizeAndAssign(Vector2 $v)
-    {
-        $this->x += $v->x;
-        $this->y += $v->y;
-        
-        return $this;
-    }
-
-    /**
-     * 
      * @param Vector2 $vector
+     * @param bool $assign
      * @return $this
      */
-    public function subtract(Vector2 $vector)
+    public function subtract(Vector2 $vector, bool $assign = false)
     {
+        if ($assign) {
+            $this->x -= $vector->x;
+            $this->y -= $vector->y;
+            
+            return $this;
+        }
+        
         return new Vector2($this->x - $vector->x, $this->y - $vector->y);
     }
 
     /**
      * 
-     * @param Vector2 $v
-     * @return $this
-     */
-    public function subtractAndAssign(Vector2 $v)
-    {
-        $this->x -= $v->x;
-        $this->y -= $v->y;
-        
-        return $this;
-    }
-
-    /**
-     * 
      * @param float $value
+     * @param bool $assign
      * @return Vector2
      */
-    public function multiply(float $value)
+    public function multiply(float $value, bool $assign = false)
     {
+        if ($assign) {
+            $this->x *= $value;
+            $this->y *= $value;
+            
+            return $this;
+        }
+        
         return new Vector2($this->x * $value, $this->y * $value);
     }
 
     /**
      * 
      * @param float $value
-     * @return $this
-     */
-    public function multiplyAndAssign(float $value)
-    {
-        $this->x *= $value;
-        $this->y *= $value;
-        
-        return $this;
-    }
-
-    /**
-     * 
-     * @param float $value
+     * @param bool $assign
      * @return Vector2
      */
-    public function divide(float $value)
+    public function divide(float $value, bool $assign = false)
     {
-        return new Vector2($this->x / $value, $this->y / $value);
-    }
-
-    /**
-     * 
-     * @param float $value
-     * @return $this
-     */
-    public function divideAssign(float $value)
-    {
-        $this->x /= $value;
-        $this->y /= $value;
+        if ($assign) {
+            $this->x /= $value;
+            $this->y /= $value;
+            
+            return $this;
+        }
         
-        return $this;
+        return new Vector2($this->x / $value, $this->y / $value);
     }
 
     /**
