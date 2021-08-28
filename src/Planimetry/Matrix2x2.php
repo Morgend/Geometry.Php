@@ -18,6 +18,8 @@
 
 namespace CleverST\Geometry\Planimetry;
 
+use CleverST\Geometry\GeometryException;
+
 /**
  * Description of Matrix2x2
  *
@@ -100,6 +102,42 @@ class Matrix2x2
     
     /**
      * 
+     * @param Matrix2x2 $matrix
+     * @param bool $assign
+     * @return Matrix2x2
+     */
+    public function add(Matrix2x2 $matrix, bool $assign = false) : Matrix2x2
+    {
+        $destination = ($assign ? $this : $this->clone());
+        
+        $destination->r1c1 += $matrix->r1c1;
+        $destination->r1c2 += $matrix->r1c2;
+        $destination->r2c1 += $matrix->r2c1;
+        $destination->r2c2 += $matrix->r2c2;
+        
+        return $destination;
+    }
+    
+    /**
+     * 
+     * @param Matrix2x2 $matrix
+     * @param bool $assign
+     * @return Matrix2x2
+     */
+    public function subtract(Matrix2x2 $matrix, bool $assign = false) : Matrix2x2
+    {
+        $destination = ($assign ? $this : $this->clone());
+        
+        $destination->r1c1 -= $matrix->r1c1;
+        $destination->r1c2 -= $matrix->r1c2;
+        $destination->r2c1 -= $matrix->r2c1;
+        $destination->r2c2 -= $matrix->r2c2;
+        
+        return $destination;
+    }
+    
+    /**
+     * 
      * @param float $number
      * @param bool $assign 
      * @return Matrix2x2
@@ -157,7 +195,7 @@ class Matrix2x2
      * @param bool $assign 
      * @return Matrix2x2
      */
-    public function divideAt(float $number, bool $assign = false) : Matrix2x2
+    public function divide(float $number, bool $assign = false) : Matrix2x2
     {
         $matrix = ($assign ? $this : new Matrix2x2());
         
@@ -167,5 +205,60 @@ class Matrix2x2
         $matrix->r2c2 = $this->r2c2 / $number;
         
         return $matrix;
+    }
+    
+    /**
+     * 
+     * @param int $row
+     * @param int $column
+     * @return float
+     * @throws GeometryException
+     */
+    public function getItem(int $row, int $column) : float
+    {
+        self::assertCellIndexesAreCorrect($row, $column);
+        
+        return $this->{'r' . $row . 'c' . $column};
+    }
+
+    /**
+     * 
+     * @param int $row
+     * @param int $column
+     * @param float $value
+     * @return $this
+     * @throws GeometryException
+     */
+    public function setItem(int $row, int $column, float $value) : Matrix2x2
+    {
+        self::assertCellIndexesAreCorrect($row, $column);
+        
+        $this->{'r' . $row . 'c' . $column} = $value;
+        
+        return $this;
+    }
+    
+    /**
+     * 
+     * @param int $row
+     * @param int $column
+     * @throws GeometryException
+     */
+    private static function assertCellIndexesAreCorrect(int $row, int $column)
+    {
+        if (!self::areCorrectCellIndexes($row, $column)) {
+            throw new GeometryException('Incorrect cell indexes (' . $row . ', ' . $column . ')');
+        }
+    }
+    
+    /**
+     * 
+     * @param int $row
+     * @param int $column
+     * @return bool
+     */
+    private static function areCorrectCellIndexes(int $row, int $column) : bool
+    {
+        return ($row == 1 || $row == 2) && ($column == 1 || $column == 2);
     }
 }

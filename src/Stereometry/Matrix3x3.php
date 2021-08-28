@@ -18,6 +18,8 @@
 
 namespace CleverST\Geometry\Stereometry;
 
+use CleverST\Geometry\GeometryException;
+
 /**
  * Description of Matrix3x3
  *
@@ -148,6 +150,56 @@ class Matrix3x3
     
     /**
      * 
+     * @param Matrix3x3 $matrix
+     * @param bool $assign
+     * @return Matrix3x3
+     */
+    public function add(Matrix3x3 $matrix, bool $assign = false) : Matrix3x3
+    {
+        $destination = ($assign ? $this : $this->clone());
+        
+        $destination->r1c1 += $matrix->r1c1;
+        $destination->r1c2 += $matrix->r1c2;
+        $destination->r1c3 += $matrix->r1c3;
+        
+        $destination->r2c1 += $matrix->r2c1;
+        $destination->r2c2 += $matrix->r2c2;
+        $destination->r2c3 += $matrix->r2c3;
+        
+        $destination->r3c1 += $matrix->r3c1;
+        $destination->r3c2 += $matrix->r3c2;
+        $destination->r3c3 += $matrix->r3c3;
+        
+        return $destination;
+    }
+    
+    /**
+     * 
+     * @param Matrix3x3 $matrix
+     * @param bool $assign
+     * @return Matrix3x3
+     */
+    public function subtract(Matrix3x3 $matrix, bool $assign = false) : Matrix3x3
+    {
+        $destination = ($assign ? $this : $this->clone());
+        
+        $destination->r1c1 -= $matrix->r1c1;
+        $destination->r1c2 -= $matrix->r1c2;
+        $destination->r1c3 -= $matrix->r1c3;
+        
+        $destination->r2c1 -= $matrix->r2c1;
+        $destination->r2c2 -= $matrix->r2c2;
+        $destination->r2c3 -= $matrix->r2c3;
+        
+        $destination->r3c1 -= $matrix->r3c1;
+        $destination->r3c2 -= $matrix->r3c2;
+        $destination->r3c3 -= $matrix->r3c3;
+        
+        return $destination;
+    }
+    
+    /**
+     * 
      * @param float $number
      * @param bool $assign 
      * @return Matrix3x3
@@ -191,7 +243,7 @@ class Matrix3x3
      * @param bool $assign 
      * @return Matrix3x3
      */
-    public function divideAt(float $number, bool $assign = false)
+    public function divide(float $number, bool $assign = false)
     {
         $matrix = ($assign ? $this : new Matrix3x3());
         
@@ -208,5 +260,43 @@ class Matrix3x3
         $matrix->r3c3 = $this->r3c3 / $number;
         
         return $matrix;
+    }
+    
+    /**
+     * 
+     * @param int $row
+     * @param int $column
+     * @return float
+     * @throws GeometryException
+     */
+    public function getItem(int $row, int $column) : float
+    {
+        self::assertCellIndexesAreCorrect($row, $column);
+        
+        return $this->{'r' . $row . 'c' . $column};
+    }
+    
+    /**
+     * 
+     * @param int $row
+     * @param int $column
+     * @throws GeometryException
+     */
+    private static function assertCellIndexesAreCorrect(int $row, int $column)
+    {
+        if (!self::areCorrectCellIndexes($row, $column)) {
+            throw new GeometryException('Incorrect cell indexes (' . $row . ', ' . $column . ')');
+        }
+    }
+    
+    /**
+     * 
+     * @param int $row
+     * @param int $column
+     * @return bool
+     */
+    private static function areCorrectCellIndexes(int $row, int $column) : bool
+    {
+        return 1 <= $row && $row <= 3 && 1 <= $column && $column <= 3;
     }
 }
