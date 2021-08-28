@@ -52,7 +52,7 @@ class Angle
      * 
      * @return Angle
      */
-    public function clone()
+    public function clone() : Angle
     {
         return new Angle($this->radians);
     }
@@ -61,23 +61,30 @@ class Angle
      * @param Angle $destination
      * @return $this
      */
-    public function copyValueTo(Angle $destination)
+    public function copyValueTo(Angle $destination) : Angle
     {
         $destination->radians = $this->radians;
         
         return $this;
     }
     
-    public function copyValueFrom(Angle $source)
+    /**
+     * 
+     * @param Angle $source
+     * @return $this
+     */
+    public function copyValueFrom(Angle $source) : Angle
     {
         $this->radians = $source->radians;
+        
+        return $this;
     }
     
     /**
      * 
      * @return float
      */
-    public function radians()
+    public function radians() : float
     {
         return $this->radians;
     }
@@ -87,7 +94,7 @@ class Angle
      * @param float $radians
      * @return $this
      */
-    public function setRadians(float $radians)
+    public function setRadians(float $radians) : Angle
     {
         $this->radians = $radians;
         
@@ -98,7 +105,7 @@ class Angle
      * 
      * @return float
      */
-    public function degrees()
+    public function degrees() : float
     {
         return $this->radians * self::DEGREES_IN_RADIAN;
     }
@@ -108,7 +115,7 @@ class Angle
      * @param float $degrees
      * @return $this
      */
-    public function setDegrees(float $degrees)
+    public function setDegrees(float $degrees) : Angle
     {
         $this->radians = $degrees / self::DEGREES_IN_RADIAN;
         
@@ -119,7 +126,7 @@ class Angle
      * 
      * @return float
      */
-    public function gradians()
+    public function gradians() : float
     {
         return $this->radians * self::GRADIANS_IN_RADIAN;
     }
@@ -129,7 +136,7 @@ class Angle
      * @param float $gradians
      * @return $this
      */
-    public function setGradians(float $gradians)
+    public function setGradians(float $gradians) : Angle
     {
         $this->radians = $gradians / self::GRADIANS_IN_RADIAN;
         
@@ -140,32 +147,30 @@ class Angle
      * 
      * @param Angle $angle
      * @param bool $assign
-     * @return Angle
+     * @return Angle|$this
      */
-    public function summarize(Angle $angle, bool $assign = false)
+    public function add(Angle $angle, bool $assign = false) : Angle
     {
-        if ($assign) {
-            $this->radians += $angle->radians;
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Angle($this->radians + $angle->radians);
+        $destination->radians += $angle->radians;
+        
+        return $destination;
     }
     
     /**
      * 
      * @param float $radians
      * @param bool $assign
-     * @return Angle
+     * @return Angle|$this
      */
-    public function addRadians(float $radians, bool $assign = false)
+    public function addRadians(float $radians, bool $assign = false) : Angle
     {
-        if ($assign) {
-            $this->radians += $radians;
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Angle($this->radians + $radians);
+        $destination->radians += $radians;
+        
+        return $destination;
     }
     
     /**
@@ -174,14 +179,13 @@ class Angle
      * @param bool $assign
      * @return Angle
      */
-    public function addDegrees(float $degrees, bool $assign = false)
+    public function addDegrees(float $degrees, bool $assign = false) : Angle
     {
-        if ($assign) {
-            $this->radians += $degrees / self::DEGREES_IN_RADIAN;
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Angle($this->radians + $degrees / self::DEGREES_IN_RADIAN);
+        $destination->radians += $degrees / self::DEGREES_IN_RADIAN;
+        
+        return $destination;
     }
     
     /**
@@ -190,14 +194,13 @@ class Angle
      * @param bool $assign
      * @return Angle
      */
-    public function addGradians(float $gradians, bool $assign = false)
+    public function addGradians(float $gradians, bool $assign = false) : Angle
     {
-        if ($assign) {
-            $this->radians += $gradians / self::GRADIANS_IN_RADIAN;
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Angle($this->radians + $gradians / self::GRADIANS_IN_RADIAN);
+        $destination->radians += $gradians / self::GRADIANS_IN_RADIAN;
+        
+        return $destination;
     }
     
     /**
@@ -206,14 +209,13 @@ class Angle
      * @param bool $assign
      * @return $this
      */
-    public function subtract(Angle $angle, bool $assign = false)
+    public function subtract(Angle $angle, bool $assign = false) : Angle
     {
-        if ($assign) {
-            $this->radians -= $angle->radians;
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Angle($this->radians - $angle->radians);
+        $destination->radians -= $angle->radians;
+        
+        return $destination;
     }
     
     /**
@@ -222,14 +224,13 @@ class Angle
      * @param bool $assign
      * @return $this
      */
-    public function subtractRadians(float $radians, bool $assign = false)
+    public function subtractRadians(float $radians, bool $assign = false) : Angle
     {
-        if ($assign) {
-            $this->radians -= $radians;
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Angle($this->radians - $radians);
+        $destination->radians -= $radians;
+        
+        return $destination;
     }
     
     /**
@@ -238,14 +239,13 @@ class Angle
      * @param bool $assign
      * @return $this
      */
-    public function subtractDegrees(float $degrees, bool $assign = false)
+    public function subtractDegrees(float $degrees, bool $assign = false) : Angle
     {
-        if ($assign) {
-            $this->radians -= $degrees / self::DEGREES_IN_RADIAN;
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Angle($this->radians - $degrees / self::DEGREES_IN_RADIAN);
+        $destination->radians -= $degrees / self::DEGREES_IN_RADIAN;
+        
+        return $destination;
     }
     
     /**
@@ -254,14 +254,13 @@ class Angle
      * @param bool $assign
      * @return $this
      */
-    public function subtractGradians(float $gradians, bool $assign = false)
+    public function subtractGradians(float $gradians, bool $assign = false) : Angle
     {
-        if ($assign) {
-            $this->radians -= $gradians / self::GRADIANS_IN_RADIAN;
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Angle($this->radians - $gradians / self::GRADIANS_IN_RADIAN);
+        $destination->radians -= $gradians / self::GRADIANS_IN_RADIAN;
+        
+        return $destination;
     }
     
     /**
@@ -270,14 +269,13 @@ class Angle
      * @param bool $assign
      * @return Angle
      */
-    public function multiply(float $value, bool $assign = false)
+    public function multiply(float $value, bool $assign = false) : Angle
     {
-        if ($assign) {
-            $this->radians *= $value;
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Angle($this->radians * $value);
+        $destination->radians *= $value;
+        
+        return $destination;
     }
     
     /**
@@ -286,21 +284,20 @@ class Angle
      * @param bool $assign
      * @return $this
      */
-    public function divide(float $value, bool $assign = false)
+    public function divide(float $value, bool $assign = false) : Angle
     {
-        if ($assign) {
-            $this->radians /= $value;
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Angle($this->radians / $value);
+        $destination->radians /= $value;
+        
+        return $destination;
     }
     
     /**
      * 
      * @return $this
      */
-    public function revert()
+    public function revert() : Angle
     {
         $this->radians = -$this->radians;
         return $this;
@@ -310,7 +307,7 @@ class Angle
      * 
      * @return Angle
      */
-    public function getReverted()
+    public function getReverted() : Angle
     {
         return new Angle(-$this->radians);
     }
@@ -319,7 +316,7 @@ class Angle
      * 
      * @return float
      */
-    public function cos()
+    public function cos() : float
     {
         return cos($this->radians);
     }
@@ -328,7 +325,7 @@ class Angle
      * 
      * @return float
      */
-    public function sin()
+    public function sin() : float
     {
         return sin($this->radians);
     }
@@ -337,7 +334,7 @@ class Angle
      * 
      * @return float
      */
-    public function tg()
+    public function tg() : float
     {
         return tan($this->radians);
     }
@@ -346,7 +343,7 @@ class Angle
      * 
      * @return float
      */
-    public function ctg()
+    public function ctg() : float
     {
         return 1.0 / tan($this->radians);
     }
@@ -356,7 +353,7 @@ class Angle
      * @param float $radians
      * @return Angle
      */
-    public static function createWithRadians(float $radians)
+    public static function createWithRadians(float $radians) : Angle
     {
         return new Angle($radians);
     }
@@ -366,7 +363,7 @@ class Angle
      * @param float $degrees
      * @return Angle
      */
-    public static function createWithDegrees(float $degrees)
+    public static function createWithDegrees(float $degrees) : Angle
     {
         return new Angle($degrees / self::DEGREES_IN_RADIAN);
     }
@@ -376,7 +373,7 @@ class Angle
      * @param float $gradians
      * @return Angle
      */
-    public static function createWithGradians(float $gradians)
+    public static function createWithGradians(float $gradians) : Angle
     {
         return new Angle($gradians / self::GRADIANS_IN_RADIAN);
     }
@@ -386,7 +383,7 @@ class Angle
      * @param float $degrees
      * @return float
      */
-    public static function degreesToRadians(float $degrees)
+    public static function degreesToRadians(float $degrees) : float
     {
         return $degrees / self::DEGREES_IN_RADIAN;
     }
@@ -396,7 +393,7 @@ class Angle
      * @param float $radians
      * @return float
      */
-    public static function radiansToDegress(float $radians)
+    public static function radiansToDegress(float $radians) : float
     {
         return $radians * self::DEGREES_IN_RADIAN;
     }
@@ -406,7 +403,7 @@ class Angle
      * @param float $gradians
      * @return float
      */
-    public static function gradiansToRadians(float $gradians)
+    public static function gradiansToRadians(float $gradians) : float
     {
         return $gradians / self::GRADIANS_IN_RADIAN;
     }
@@ -416,7 +413,7 @@ class Angle
      * @param float $radians
      * @return float
      */
-    public static function radiansToGradians(float $radians)
+    public static function radiansToGradians(float $radians) : float
     {
         return $radians * self::GRADIANS_IN_RADIAN;
     }
@@ -426,7 +423,7 @@ class Angle
      * @param float $gradians
      * @return float
      */
-    public static function gradiansToDegrees(float $gradians)
+    public static function gradiansToDegrees(float $gradians) : float
     {
         return $gradians * self::DEGREES_IN_GRADIAN;
     }
@@ -436,7 +433,7 @@ class Angle
      * @param float $degrees
      * @return float
      */
-    public static function degreesToGradians(float $degrees)
+    public static function degreesToGradians(float $degrees) : float
     {
         return $degrees / self::DEGREES_IN_GRADIAN;
     }

@@ -18,7 +18,7 @@
 
 namespace CleverST\Geometry\Planimetry;
 
-use CleverST\Geometry\Helper;
+use CleverST\Geometry\MathHelper;
 
 /**
  * Description of Vector2
@@ -34,13 +34,13 @@ class Vector2
      *
      * @var float
      */
-    private $x = self::DEFAULT_COORDINATE_VALUE;
+    public float $x = self::DEFAULT_COORDINATE_VALUE;
     
     /**
      *
      * @var float
      */
-    private $y = self::DEFAULT_COORDINATE_VALUE;
+    public float $y = self::DEFAULT_COORDINATE_VALUE;
     
     public function __construct(float $x = self::DEFAULT_COORDINATE_VALUE, float $y = self::DEFAULT_COORDINATE_VALUE)
     {
@@ -52,7 +52,7 @@ class Vector2
      * 
      * @return Vector2
      */
-    public function clone()
+    public function clone() : Vector2
     {
         return new Vector2($this->x, $this->y);
     }
@@ -62,7 +62,7 @@ class Vector2
      * @param Vector2 $destination
      * @return $this
      */
-    public function copyValuesTo(Vector2 $destination)
+    public function copyValuesTo(Vector2 $destination) : Vector2
     {
         $destination->x = $this->x;
         $destination->y = $this->y;
@@ -75,7 +75,7 @@ class Vector2
      * @param Vector2 $source
      * @return $this
      */
-    public function copyValuesFrom(Vector2 $source)
+    public function copyValuesFrom(Vector2 $source) : Vector2
     {
         $this->x = $source->x;
         $this->y = $source->y;
@@ -85,59 +85,28 @@ class Vector2
     
     /**
      * 
-     * @return float
+     * @return boolean
      */
-    public function x()
+    public function isUnit() : bool
     {
-        return $this->x;
-    }
-    
-    /**
-     * 
-     * @param float $x
-     * @return $this
-     */
-    public function setX(float $x)
-    {
-        $this->x = $x;
-        
-        return $this;
-    }
-    
-    /**
-     * 
-     * @return float
-     */
-    public function y()
-    {
-        return $this->y;
-    }
-    
-    /**
-     * 
-     * @param float $y
-     * @return $this
-     */
-    public function setY(float $y)
-    {
-        $this->y = $y;
-        return $this;
+        $difference = $this->x * $this->x + $this->y * $this->y - 1.0;
+        return MathHelper::NEGATIVE_EPSYLON <= $difference && $difference <= MathHelper::POSITIVE_EPSYLON;
     }
     
     /**
      * 
      * @return boolean
      */
-    public function isZero()
+    public function isZero() : bool
     {
-        return $this->x * $this->x + $this->y * $this->y <= Helper::POSITIVE_SQUARE_EPSYLON;
+        return $this->x * $this->x + $this->y * $this->y <= MathHelper::POSITIVE_SQUARE_EPSYLON;
     }
     
     /**
      * 
      * @return $this
      */
-    public function setToZero()
+    public function setToZero() : Vector2
     {
         $this->x = self::DEFAULT_COORDINATE_VALUE;
         $this->y = self::DEFAULT_COORDINATE_VALUE;
@@ -151,7 +120,7 @@ class Vector2
      * @param float $y
      * @return $this
      */
-    public function setValues(float $x, float $y)
+    public function setValues(float $x, float $y) : Vector2
     {
         $this->x = $x;
         $this->y = $y;
@@ -164,7 +133,7 @@ class Vector2
      * @param Vector2 $vector
      * @return float
      */
-    public function scalar(Vector2 $vector)
+    public function scalar(Vector2 $vector) : float
     {
         return $this->x * $vector->x + $this->y * $vector->y;
     }
@@ -175,7 +144,7 @@ class Vector2
      * @param float $y
      * @return float
      */
-    public function scalarXY(float $x, float $y)
+    public function scalarXY(float $x, float $y) : float
     {
         return $this->x * $x + $this->y * $y;
     }
@@ -184,7 +153,7 @@ class Vector2
      * 
      * @return float
      */
-    public function module()
+    public function module() : float
     {
         return sqrt($this->x * $this->x + $this->y * $this->y);
     }
@@ -193,7 +162,7 @@ class Vector2
      * 
      * @return boolean If vector has been normalized to an identity vector then the method returns TRUE otherwise the vector sets to zero and the method returns FALSE
      */
-    public function normalize()
+    public function normalize() : bool
     {
         $squareModule = $this->x * $this->x + $this->y * $this->y;
         
@@ -215,7 +184,7 @@ class Vector2
      * 
      * @return Vector2
      */
-    public function getNormalized()
+    public function getNormalized() : Vector2
     {
         $copy = $this->clone();
         $copy->normalize();
@@ -228,16 +197,14 @@ class Vector2
      * @param bool $assign
      * @return Vector2
      */
-    public function summarize(Vector2 $vector, bool $assign = false)
+    public function add(Vector2 $vector, bool $assign = false) : Vector2
     {
-        if ($assign) {
-            $this->x += $vector->x;
-            $this->y += $vector->y;
-            
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Vector2($this->x + $vector->x, $this->y + $vector->y);
+        $destination->x += $vector->x;
+        $destination->y += $vector->y;
+        
+        return $destination;
     }
 
     /**
@@ -246,16 +213,14 @@ class Vector2
      * @param bool $assign
      * @return $this
      */
-    public function subtract(Vector2 $vector, bool $assign = false)
+    public function subtract(Vector2 $vector, bool $assign = false) : Vector2
     {
-        if ($assign) {
-            $this->x -= $vector->x;
-            $this->y -= $vector->y;
-            
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Vector2($this->x - $vector->x, $this->y - $vector->y);
+        $destination->x -= $vector->x;
+        $destination->y -= $vector->y;
+        
+        return $destination;
     }
 
     /**
@@ -264,16 +229,14 @@ class Vector2
      * @param bool $assign
      * @return Vector2
      */
-    public function multiply(float $value, bool $assign = false)
+    public function multiply(float $value, bool $assign = false) : Vector2
     {
-        if ($assign) {
-            $this->x *= $value;
-            $this->y *= $value;
-            
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Vector2($this->x * $value, $this->y * $value);
+        $destination->x *= $value;
+        $destination->y *= $value;
+        
+        return $destination;
     }
 
     /**
@@ -282,23 +245,21 @@ class Vector2
      * @param bool $assign
      * @return Vector2
      */
-    public function divide(float $value, bool $assign = false)
+    public function divide(float $value, bool $assign = false) : Vector2
     {
-        if ($assign) {
-            $this->x /= $value;
-            $this->y /= $value;
-            
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Vector2($this->x / $value, $this->y / $value);
+        $destination->x /= $value;
+        $destination->y /= $value;
+        
+        return $destination;
     }
 
     /**
      * 
      * @return $this
      */
-    public function reverse()
+    public function reverse() : Vector2
     {
         $this->x = -$this->x;
         $this->y = -$this->y;
@@ -310,7 +271,7 @@ class Vector2
      * 
      * @return Vector2
      */
-    public function makeReverted()
+    public function makeReverted() : Vector2
     {
         return new Vector2(-$this->x, -$this->y);
     }

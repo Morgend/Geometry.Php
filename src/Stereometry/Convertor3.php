@@ -48,7 +48,7 @@ class Convertor3
      * 
      * @return Matrix3x3
      */
-    public function warp()
+    public function warp() : Matrix3x3
     {
        return $this->warp; 
     }
@@ -57,7 +57,7 @@ class Convertor3
      * 
      * @return Vector3
      */
-    public function shift()
+    public function shift() : Vector3
     {
        return $this->shift;
     }
@@ -73,7 +73,7 @@ class Convertor3
      * @param Vector3 $vector
      * @return Vector3
      */
-    public function convertVector(Vector3 $vector)
+    public function convertVector(Vector3 $vector) : Vector3
     {
         $result = $this->warp->mutliplyAtVector($vector);
         

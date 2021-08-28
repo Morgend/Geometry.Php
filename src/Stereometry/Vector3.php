@@ -18,7 +18,7 @@
 
 namespace CleverST\Geometry\Stereometry;
 
-use CleverST\Geometry\Helper;
+use CleverST\Geometry\MathHelper;
 
 /**
  * Description of Vector3
@@ -34,19 +34,19 @@ class Vector3
      *
      * @var float
      */
-    private $x = self::DEFAULT_COORDINATE_VALUE;
+    public float $x = self::DEFAULT_COORDINATE_VALUE;
     
     /**
      *
      * @var float
      */
-    private $y = self::DEFAULT_COORDINATE_VALUE;
+    public float $y = self::DEFAULT_COORDINATE_VALUE;
     
     /**
      *
      * @var float
      */
-    private $z = self::DEFAULT_COORDINATE_VALUE;
+    public float $z = self::DEFAULT_COORDINATE_VALUE;
     
     public function __construct(float $x = self::DEFAULT_COORDINATE_VALUE, float $y = self::DEFAULT_COORDINATE_VALUE, float $z = self::DEFAULT_COORDINATE_VALUE)
     {
@@ -59,7 +59,7 @@ class Vector3
      * 
      * @return Vector3
      */
-    public function clone()
+    public function clone() : Vector3
     {
         return new Vector3($this->x, $this->y, $this->z);
     }
@@ -69,7 +69,7 @@ class Vector3
      * @param Vector3 $vector
      * @return $this
      */
-    public function copyValuesFrom(Vector3 $vector)
+    public function copyValuesFrom(Vector3 $vector) : Vector3
     {
         $this->x = $vector->x;
         $this->y = $vector->y;
@@ -83,7 +83,7 @@ class Vector3
      * @param Vector3 $vector
      * @return $this
      */
-    public function copyValuesTo(Vector3 $vector)
+    public function copyValuesTo(Vector3 $vector) : Vector3
     {
         $vector->x = $this->x;
         $vector->y = $this->y;
@@ -94,79 +94,28 @@ class Vector3
     
     /**
      * 
-     * @return float
+     * @return boolean
      */
-    public function x()
+    public function isUnit() : bool
     {
-        return $this->x;
-    }
-    
-    /**
-     * 
-     * @param float $x
-     * @return $this
-     */
-    public function setX(float $x)
-    {
-        $this->x = $x;
-        
-        return $this;
-    }
-    
-    /**
-     * 
-     * @return float
-     */
-    public function y()
-    {
-        return $this->y;
-    }
-    
-    /**
-     * 
-     * @param float $y
-     * @return $this
-     */
-    public function setY(float $y)
-    {
-        $this->y = $y;
-        return $this;
-    }
-    
-    /**
-     * 
-     * @return float
-     */
-    public function z()
-    {
-        return $this->z;
-    }
-    
-    /**
-     * 
-     * @param float $z
-     * @return $this
-     */
-    public function setZ(float $z)
-    {
-        $this->z = $z;
-        return $this;
+        $difference = $this->x * $this->x + $this->y * $this->y + $this->z * $this->z - 1.0;
+        return MathHelper::NEGATIVE_EPSYLON <= $difference && $difference <= MathHelper::POSITIVE_EPSYLON;
     }
     
     /**
      * 
      * @return boolean
      */
-    public function isZero()
+    public function isZero() : bool
     {
-        return $this->x * $this->x + $this->y * $this->y + $this->z * $this->z <= Helper::POSITIVE_SQUARE_EPSYLON;
+        return $this->x * $this->x + $this->y * $this->y + $this->z * $this->z <= MathHelper::POSITIVE_SQUARE_EPSYLON;
     }
     
     /**
      * 
      * @return $this
      */
-    public function setToZero()
+    public function setToZero() : Vector3
     {
         $this->x = self::DEFAULT_COORDINATE_VALUE;
         $this->y = self::DEFAULT_COORDINATE_VALUE;
@@ -182,7 +131,7 @@ class Vector3
      * @param float $z
      * @return $this
      */
-    public function setValues(float $x, float $y, float $z)
+    public function setValues(float $x, float $y, float $z) : Vector3
     {
         $this->x = $x;
         $this->y = $y;
@@ -193,12 +142,12 @@ class Vector3
     
     /**
      * 
-     * @param Vector3 $v
+     * @param Vector3 $vector
      * @return float
      */
-    public function scalar(Vector3 $v)
+    public function scalar(Vector3 $vector) : float
     {
-        return $this->x * $v->x + $this->y * $v->y + $this->z * $v->z;
+        return $this->x * $vector->x + $this->y * $vector->y + $this->z * $vector->z;
     }
     
     /**
@@ -208,7 +157,7 @@ class Vector3
      * @param float $z
      * @return float
      */
-    public function scalarXYZ(float $x, float $y, float $z)
+    public function scalarXYZ(float $x, float $y, float $z) : float
     {
         return $this->x * $x + $this->y * $y + $this->z * $z;
     }
@@ -216,9 +165,9 @@ class Vector3
     /**
      * 
      * @param Vector3 $vector
-     * @return Vector3
+     * @return Vector3|$this
      */
-    public function vectorMultiply(Vector3 $vector, bool $assign = false)
+    public function vectorMultiply(Vector3 $vector, bool $assign = false) : Vector3
     {
         $x = $this->y * $vector->z - $this->z * $vector->y;
         $y = $this->z * $vector->x - $this->x * $vector->z;
@@ -236,7 +185,7 @@ class Vector3
      * 
      * @return float
      */
-    public function module()
+    public function module() : float
     {
         return sqrt($this->x * $this->x + $this->y * $this->y + $this->z * $this->z);
     }
@@ -245,7 +194,7 @@ class Vector3
      * 
      * @return boolean If vector has been normalized to an identity vector then the method returns TRUE otherwise the vector sets to zero and the method returns FALSE
      */
-    public function normalize()
+    public function normalize() : bool
     {
         $squareModule = $this->x * $this->x + $this->y * $this->y + $this->z * $this->z;
         
@@ -269,7 +218,7 @@ class Vector3
      * 
      * @return Vector3
      */
-    public function getNormalized()
+    public function getNormalized() : Vector3
     {
         $copy = $this->clone();
         $copy->normalize();
@@ -281,38 +230,34 @@ class Vector3
      * 
      * @param Vector3 $vector
      * @param bool $assign
-     * @return Vector3
+     * @return Vector3|$this
      */
-    public function summarize(Vector3 $vector, bool $assign = false)
+    public function add(Vector3 $vector, bool $assign = false) : Vector3
     {
-        if ($assign) {
-            $this->x += $vector->x;
-            $this->y += $vector->y;
-            $this->z += $vector->z;
-            
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Vector3($this->x + $vector->x, $this->y + $vector->y);
+        $destination->x += $vector->x;
+        $destination->y += $vector->y;
+        $destination->z += $vector->z;
+        
+        return $destination;
     }
 
     /**
      * 
      * @param Vector3 $vector
      * @param bool $assign
-     * @return $this
+     * @return Vector3|$this
      */
-    public function subtract(Vector3 $vector, bool $assign = false)
+    public function subtract(Vector3 $vector, bool $assign = false) : Vector3
     {
-        if ($assign) {
-            $this->x -= $vector->x;
-            $this->y -= $vector->y;
-            $this->z -= $vector->z;
-            
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Vector3($this->x - $vector->x, $this->y - $vector->y);
+        $destination->x -= $vector->x;
+        $destination->y -= $vector->y;
+        $destination->z -= $vector->z;
+        
+        return $destination;
     }
 
 
@@ -320,38 +265,34 @@ class Vector3
      * 
      * @param float $value
      * @param bool $assign
-     * @return Vector3
+     * @return Vector3|$this
      */
-    public function multiply(float $value, bool $assign = false)
+    public function multiply(float $value, bool $assign = false) : Vector3
     {
-        if ($assign) {
-            $this->x *= $value;
-            $this->y *= $value;
-            $this->z *= $value;
-            
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Vector3($this->x * $value, $this->y * $value);
+        $destination->x *= $value;
+        $destination->y *= $value;
+        $destination->z *= $value;
+        
+        return $destination;
     }
 
     /**
      * 
      * @param float $value
      * @param bool $assign
-     * @return Vector3
+     * @return Vector3|$this
      */
-    public function divide(float $value, bool $assign = false)
+    public function divide(float $value, bool $assign = false) : Vector3
     {
-        if ($assign) {
-            $this->x /= $value;
-            $this->y /= $value;
-            $this->z /= $value;
-            
-            return $this;
-        }
+        $destination = ($assign ? $this : $this->clone());
         
-        return new Vector3($this->x / $value, $this->y / $value);
+        $destination->x /= $value;
+        $destination->y /= $value;
+        $destination->z /= $value;
+        
+        return $destination;
     }
 
     /**

@@ -26,114 +26,77 @@ namespace CleverST\Geometry\Planimetry;
  */
 class Matrix2x2
 {
-    const ITEM_AMOUNT = 4;
+    const DEFAULT_CELL_VALUE = 0.0;
     
-    const ROW_AMOUNT = 2;
-    const COLUMN_AMOUNT = 2;
-    
-    /**
-     * 
-     * @var float[]
-     */
-    private $items = [
-        0.0, 0.0,
-        0.0, 0.0
-    ];
+    public float $r1c1 = self::DEFAULT_CELL_VALUE;
+    public float $r1c2 = self::DEFAULT_CELL_VALUE;
+    public float $r2c1 = self::DEFAULT_CELL_VALUE;
+    public float $r2c2 = self::DEFAULT_CELL_VALUE;
     
     public function loadIdentity()
     {
-        $this->items[0] = 1.0;
-        $this->items[1] = 0.0;
-        $this->items[2] = 0.0;
-        $this->items[3] = 1.0;
+        $this->r1c1 = 1.0;
+        $this->r1c2 = 0.0;
+        $this->r2c1 = 0.0;
+        $this->r2c2 = 1.0;
     }
     
     public function loadZero()
     {
-        for ($i = 0; $i < self::ITEM_AMOUNT; $i++) {
-            $this->items[$i] = 0.0;
-        }
+        $this->r1c1 = self::DEFAULT_CELL_VALUE;
+        $this->r1c2 = self::DEFAULT_CELL_VALUE;
+        $this->r2c1 = self::DEFAULT_CELL_VALUE;
+        $this->r2c2 = self::DEFAULT_CELL_VALUE;
     }
     
-    public function copyTo(Matrix2x2 $matrix)
+    public function copyValuesTo(Matrix2x2 $matrix)
     {
         if ($matrix == $this) {
             return;
         }
         
-        for ($i = 0; $i < self::ITEM_AMOUNT; $i++) {
-            $matrix->items[$i] = $this->items[$i];
-        }
+        $matrix->r1c1 = $this->r1c1;
+        $matrix->r1c2 = $this->r1c2;
+        $matrix->r2c1 = $this->r2c1;
+        $matrix->r2c2 = $this->r2c2;
     }
     
-    public function copyFrom(Matrix2x2 $matrix)
+    public function copyValuesFrom(Matrix2x2 $matrix)
     {
         if ($matrix == $this) {
             return;
         }
         
-        for ($i = 0; $i < self::ITEM_AMOUNT; $i++) {
-            $this->items[$i] = $matrix->items[$i];
-        }
+        $this->r1c1 = $matrix->r1c1;
+        $this->r1c2 = $matrix->r1c2;
+        $this->r2c1 = $matrix->r2c1;
+        $this->r2c2 = $matrix->r2c2;
     }
     
     /**
      * 
      * @return Matrix2x2
      */
-    public function clone()
+    public function clone() : Matrix2x2
     {
         $matrix = new Matrix2x2();
         
-        for ($i = 0; $i < self::ITEM_AMOUNT; $i++) {
-            $matrix->items[$i] = $this->items[$i];
-        }
+        $matrix->r1c1 = $this->r1c1;
+        $matrix->r1c2 = $this->r1c2;
+        $matrix->r2c1 = $this->r2c1;
+        $matrix->r2c2 = $this->r2c2;
         
         return $matrix;
     }
     
     /**
      * 
-     * @param int $row
-     * @param int $column
-     * @return boolean
-     */
-    public function areCorrectIndexes(int $row, int $column)
-    {
-        return 0 <= $row && $row < self::ROW_AMOUNT
-            && 0 <= $column && $column < self::COLUMN_AMOUNT;
-    }
-    
-    /**
-     * 
-     * @param int $row
-     * @param int $column
      * @return float
      */
-    public function getItem(int $row, int $column)
+    public function determinant() : float
     {
-        if ($this->areCorrectIndexes($row, $column)) {
-            return $this->items[($row << 1) | $column];
-        }
-        
-        //TODO: throw exception
-        return 0.0;
-        
-        
+        return $this->r1c1 * $this->r2c2 - $this->r1c2 * $this->r2c1;
     }
-    
-    /**
-     * 
-     * @param int $row
-     * @param int $column
-     * @param float $value
-     */
-    public function setItem(int $row, int $column, float $value)
-    {
-        if ($this->areCorrectIndexes($row, $column)) {
-            $this->items[($row << 1) | $column] = $value;
-        }
-   }
     
     /**
      * 
@@ -141,21 +104,14 @@ class Matrix2x2
      * @param bool $assign 
      * @return Matrix2x2
      */
-    public function mutliplyAtNumber(float $number, bool $assign = false)
+    public function mutliplyAtNumber(float $number, bool $assign = false) : Matrix2x2
     {
-        if ($assign) {
-            for ($i = 0; $i < self::ITEM_AMOUNT; $i++) {
-                $this->items[$i] *= $number;
-            }
-            
-            return $this;
-        }
+        $matrix = ($assign ? $this : new Matrix2x2());
         
-        $matrix = new Matrix2x2();
-        
-        for ($i = 0; $i < self::ITEM_AMOUNT; $i++) {
-            $matrix->items[$i] = $this->items[$i] * $number;
-        }
+        $matrix->r1c1 = $this->r1c1 * $number;
+        $matrix->r1c2 = $this->r1c2 * $number;
+        $matrix->r2c1 = $this->r2c1 * $number;
+        $matrix->r2c2 = $this->r2c2 * $number;
         
         return $matrix;
     }
@@ -165,11 +121,11 @@ class Matrix2x2
      * @param Vector2 $vector
      * @return Vector2
      */
-    public function mutliplyAtVector(Vector2 $vector)
+    public function mutliplyAtVector(Vector2 $vector) : Vector2
     {
         return new Vector2(
-                $vector->x() * $this->items[0] + $vector->y() * $this->items[1],
-                $vector->x() * $this->items[3] + $vector->y() * $this->items[3]
+                $vector->x * $this->r1c1 + $vector->y * $this->r1c2,
+                $vector->x * $this->r1c2 + $vector->y * $this->r2c2
         );
     }
     
@@ -178,19 +134,19 @@ class Matrix2x2
      * @param Matrix2x2 $matrix
      * @return Matrix2x2
      */
-    public function mutliplyAtMatrix(Matrix2x2 $matrix, bool $assign = false)
+    public function mutliplyAtMatrix(Matrix2x2 $matrix, bool $assign = false) : Matrix2x2
     {
-        $r0c0 = $this->r0c0 * $matrix->r0c0 + $this->r0c1 * $matrix->r1c0;
-        $r0c1 = $this->r0c0 * $matrix->r0c1 + $this->r0c1 * $matrix->r1c1;
-        $r1c0 = $this->r1c0 * $matrix->r0c0 + $this->r1c1 * $matrix->r1c0;
-        $r1c1 = $this->r1c0 * $matrix->r0c1 + $this->r1c1 * $matrix->r1c1;
+        $r1c1 = $this->r1c1 * $matrix->r1c1 + $this->r1c2 * $matrix->r2c1;
+        $r1c2 = $this->r1c1 * $matrix->r1c2 + $this->r1c2 * $matrix->r2c2;
+        $r2c1 = $this->r2c1 * $matrix->r1c1 + $this->r2c2 * $matrix->r2c1;
+        $r2c2 = $this->r2c1 * $matrix->r1c2 + $this->r2c2 * $matrix->r2c2;
 
         $result = ($assign ? $this : new Matrix2x2());
         
-        $result->r0c0 = $r0c0;
-        $result->r0c1 = $r0c1;
-        $result->r1c0 = $r1c0;
         $result->r1c1 = $r1c1;
+        $result->r1c2 = $r1c2;
+        $result->r2c1 = $r2c1;
+        $result->r2c2 = $r2c2;
         
         return $result;
     }
@@ -201,21 +157,14 @@ class Matrix2x2
      * @param bool $assign 
      * @return Matrix2x2
      */
-    public function divideAt(float $number, bool $assign = false)
+    public function divideAt(float $number, bool $assign = false) : Matrix2x2
     {
-        if ($assign) {
-            for ($i = 0; $i < self::ITEM_AMOUNT; $i++) {
-                $this->items[$i] /= $number;
-            }
-            
-            return $this;
-        }
+        $matrix = ($assign ? $this : new Matrix2x2());
         
-        $matrix = new Matrix2x2();
-        
-        for ($i = 0; $i < self::ITEM_AMOUNT; $i++) {
-            $matrix->items[$i] = $this->items[$i] / $number;
-        }
+        $matrix->r1c1 = $this->r1c1 / $number;
+        $matrix->r1c2 = $this->r1c2 / $number;
+        $matrix->r2c1 = $this->r2c1 / $number;
+        $matrix->r2c2 = $this->r2c2 / $number;
         
         return $matrix;
     }

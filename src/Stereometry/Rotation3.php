@@ -51,7 +51,7 @@ class Rotation3
      * 
      * @return Vector3
      */
-    public function axis()
+    public function axis() : Vector3
     {
         return $this->axis;
     }
@@ -60,7 +60,7 @@ class Rotation3
      * 
      * @return Angle
      */
-    public function angle()
+    public function angle() : Angle
     {
         return $this->angle;
     }

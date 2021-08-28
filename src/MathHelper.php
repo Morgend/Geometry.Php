@@ -35,7 +35,7 @@ class MathHelper
     const HIGH_EPSYLON = 1.000000000000001;
     const LOW_EPSYLON = 0.999999999999999;
 
-    public static function areEqual($a, $b)
+    public static function areEqual(float $a, float $b)
     {
 	if (-self::HIGH_EPSYLON <= $b && $b <= self::HIGH_EPSYLON) {
             $difference = $b - $a;

@@ -48,7 +48,7 @@ class Convertor2
      * 
      * @return Matrix2x2
      */
-    public function warp()
+    public function warp() : Matrix2x2
     {
        return $this->warp; 
     }
@@ -57,7 +57,7 @@ class Convertor2
      * 
      * @return Vector2
      */
-    public function shift()
+    public function shift() : Vector2
     {
        return $this->shift;
     }
@@ -66,7 +66,7 @@ class Convertor2
      * 
      * @return Convertor2
      */
-    public function clone()
+    public function clone() : Convertor2
     {
         $clone = new Convertor2();
         
@@ -93,7 +93,7 @@ class Convertor2
      * @param Vector2 $vector
      * @return Vector2
      */
-    public function convertVector(Vector2 $vector)
+    public function convertVector(Vector2 $vector) : Vector2
     {
         $result = $this->warp->mutliplyAtVector($vector);
         
